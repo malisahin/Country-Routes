@@ -37,7 +37,7 @@ public class CountryDataProvider {
             try {
                 ResponseEntity<CountryDTO[]> response = restTemplate.getForEntity(uri, CountryDTO[].class);
                 countryList = Arrays.stream(response.getBody())
-                        .filter(country -> !country.getBorders().isEmpty())
+                        //.filter(country -> !country.getBorders().isEmpty())
                         .map(countryDTO -> new Country(countryDTO.getBorders(), countryDTO.getCca3()))
                         .collect(Collectors.toList());
                 LOG.info("Country JSON Data could be fetched successfully.");

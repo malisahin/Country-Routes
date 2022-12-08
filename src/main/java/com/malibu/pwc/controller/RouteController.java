@@ -1,6 +1,7 @@
 package com.malibu.pwc.controller;
 
 import com.malibu.pwc.model.Country;
+import com.malibu.pwc.model.dto.RouteDTO;
 import com.malibu.pwc.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,22 +15,22 @@ import java.util.List;
 import java.util.Map;
 
 @RestController()
-@RequestMapping("/country")
-public class CountryController {
+@RequestMapping("/routing")
+public class RouteController {
 
     @Autowired
     private CountryService countryService;
 
     @GetMapping(value = "/{origin}/{destination}")
-    public ResponseEntity<List<String>> getRoute(@PathVariable("origin") String origin, @PathVariable("destination") String destination) {
-
+    public ResponseEntity<RouteDTO> getRoute(@PathVariable("origin") String origin, @PathVariable("destination") String destination) {
         System.out.println("Origin: " + origin + " Destination: " + destination);
-        return new ResponseEntity<>(countryService.getPath(origin, destination), HttpStatus.BAD_REQUEST);
+        List<String> routeList = countryService.getPath(origin, destination);
+        return new ResponseEntity<>(new RouteDTO(routeList), HttpStatus.OK);
     }
 
     @GetMapping()
-    public String test() {
-        return "Hello World";
+    public ResponseEntity<Map<String, Country>> countryList() {
+        return new ResponseEntity<>(countryService.getList(), HttpStatus.OK);
     }
 }
 

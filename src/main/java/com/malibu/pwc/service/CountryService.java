@@ -18,17 +18,22 @@ public class CountryService {
 
     private final CountryDataProvider countryDataProvider;
 
-    public Map<String, Country> getRoute() {
-        return countryDataProvider.getCountryList();
-    }
 
     public final List<String> getPath(String originName, String destinationName) {
-
-        final Map<String, Country> countries = countryDataProvider.getCountryList();
-
         if (originName == null || originName.isBlank()) {
             throw new RuleException("Origin cannot be empty or blank.");
         }
+
+        if (destinationName == null || destinationName.isBlank()) {
+            throw new RuleException("Destination cannot be empty or blank");
+        }
+
+        if (destinationName.equals(originName)) {
+            throw new RuleException("Origin and Destination are the same.");
+        }
+
+        final Map<String, Country> countries = countryDataProvider.getCountryList();
+
         Country origin = countries.get(originName);
         if (origin == null) {
             throw new ResourceNotFoundException("Origin %s is not found in source list.".formatted(originName));
@@ -37,9 +42,6 @@ public class CountryService {
             throw new PathNotFoundException("Origin(%s) has no any border to reach destination.".formatted(originName));
         }
 
-        if (destinationName == null || destinationName.isBlank()) {
-            throw new RuleException("Destination cannot be empty or blank");
-        }
         Country destination = countries.get(destinationName);
         if (destination == null) {
             throw new ResourceNotFoundException("Destination(%s) is not found in source list.".formatted(destinationName));
@@ -47,7 +49,6 @@ public class CountryService {
         if (destination.getBorders().isEmpty()) {
             throw new PathNotFoundException("Destination(%s) has no any border. So origin(%s) can not reach destination point.".formatted(destinationName, originName));
         }
-
 
         return search(countries, origin, destination);
     }
@@ -69,7 +70,7 @@ public class CountryService {
 
         visited.put(currentCountry, true);
 
-        OUTER:
+        START_POINT:
         while (!pivot.isEmpty()) {
             currentCountry = pivot.remove();
             log.debug("Visiting " + currentCountry.getName());
@@ -87,7 +88,7 @@ public class CountryService {
                         if (neighbourCountry.equals(destination)) {
                             log.debug("Shortest path found");
                             currentCountry = neighbourCountry;
-                            break OUTER;
+                            break START_POINT;
                         }
                     } else {
                         log.debug("... skipping neighbour " + neighbourCountry.getName());
@@ -111,4 +112,7 @@ public class CountryService {
     }
 
 
+    public Map<String, Country> getList() {
+        return countryDataProvider.getCountryList();
+    }
 }
