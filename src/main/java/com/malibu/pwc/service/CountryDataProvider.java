@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Component
 public class CountryDataProvider {
 
-
     private static final Logger LOG = LoggerFactory.getLogger(CountryService.class);
     private final String uri = "https://raw.githubusercontent.com/mledoze/countries/master/countries.json";
     private final RestTemplate restTemplate;

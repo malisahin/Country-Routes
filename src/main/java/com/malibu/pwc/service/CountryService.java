@@ -54,9 +54,9 @@ public class CountryService {
     }
 
     /**
-     * @param countries
-     * @param origin
-     * @param destination
+     * @param countries Whole Country List
+     * @param origin Start Point
+     * @param destination End Point
      * @return route
      * @apiNote Depth-First Traversal
      */
@@ -73,25 +73,19 @@ public class CountryService {
         START_POINT:
         while (!pivot.isEmpty()) {
             currentCountry = pivot.remove();
-            log.debug("Visiting " + currentCountry.getName());
             if (currentCountry.equals(destination)) {
-                log.debug("Origin and destination are equal");
                 break;
             } else {
                 for (var neighbour : currentCountry.getBorders()) {
                     var neighbourCountry = countries.get(neighbour);
                     if (!visited.containsKey(neighbourCountry)) {
-                        log.debug("... registering neighbour " + neighbourCountry.getName());
                         pivot.add(neighbourCountry);
                         visited.put(neighbourCountry, true);
                         previous.put(neighbourCountry, currentCountry);
                         if (neighbourCountry.equals(destination)) {
-                            log.debug("Shortest path found");
                             currentCountry = neighbourCountry;
                             break START_POINT;
                         }
-                    } else {
-                        log.debug("... skipping neighbour " + neighbourCountry.getName());
                     }
                 }
             }

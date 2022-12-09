@@ -14,11 +14,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI apiInfo() {
         return new OpenAPI()
-                .info(
-                        new Info()
-                                .title("Country Route Project")
-                                .version("1.0.0")
-                );
+                .info(new Info().title("Country Route Project").version("1.0.0"));
     }
 
     @Bean

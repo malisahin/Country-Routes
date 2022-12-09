@@ -23,7 +23,6 @@ public class RouteController {
 
     @GetMapping(value = "/{origin}/{destination}")
     public ResponseEntity<RouteDTO> getRoute(@PathVariable("origin") String origin, @PathVariable("destination") String destination) {
-        System.out.println("Origin: " + origin + " Destination: " + destination);
         List<String> routeList = countryService.getPath(origin, destination);
         return new ResponseEntity<>(new RouteDTO(routeList), HttpStatus.OK);
     }
